@@ -74,3 +74,7 @@ func confirmation(yesOrNo string) {
 
 	}
 }
+
+func printer() {
+	fmt.Println("Would you like to make new reminders? Please reply with yes or no")
+}
