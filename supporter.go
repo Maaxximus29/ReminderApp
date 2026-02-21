@@ -10,14 +10,15 @@ import (
 )
 
 type TasksToBeCompleted struct {
-	TaskName      string
-	DueDate       time.Time
-	SpecifiedTime time.Time
+	TaskName      string    `jason:"task"`
+	DueDate       time.Time `jason:"date"`
+	SpecifiedTime time.Time `jason:"time"`
 }
 
 type Tasks []TasksToBeCompleted
 
-var allTasks Tasks
+// var allTasks Tasks
+var decodeJson Tasks
 var createdInside TasksToBeCompleted
 
 func createTask(taskName string, dueDate time.Time, specifiedTime time.Time) TasksToBeCompleted {
@@ -25,7 +26,7 @@ func createTask(taskName string, dueDate time.Time, specifiedTime time.Time) Tas
 	createdInside.TaskName = taskName
 	createdInside.DueDate = dueDate
 	createdInside.SpecifiedTime = specifiedTime
-	allTasks = append(allTasks, createdInside)
+	decodeJson = append(decodeJson, createdInside)
 	return createdInside
 }
 
@@ -58,7 +59,23 @@ func jsonDecoding() []TasksToBeCompleted {
 
 }
 
+func checker(filename string) bool {
+	_, err := os.Stat(filename)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 func grandIO() {
+	checker := checker("storage.json")
+	if checker == true {
+		checkerNewData, err := os.ReadFile("storage.json")
+		if err != nil {
+			panic(err)
+		}
+		err = json.Unmarshal(checkerNewData, &decodeJson)
+	}
 
 	fmt.Println("Please enter the following details-")
 	scanner := bufio.NewScanner(os.Stdin)
@@ -83,8 +100,8 @@ func grandIO() {
 	grandCreatedTask := createTask(grandTaskName, grandParsedDate, grandParsedTime)
 	fmt.Printf("Reminder added successfully: %s %s %s\n", grandCreatedTask.TaskName, grandCreatedTask.DueDate.Format("02-01-2006"), grandCreatedTask.SpecifiedTime.Format("3:04 PM"))
 
-	jsonEncoding(allTasks)
-	decodeJson := jsonDecoding()
+	jsonEncoding(decodeJson)
+	decodeJson = jsonDecoding()
 
 	fmt.Println("To view the created task please type Yes else No")
 	var grandConfirmationToViewAgain string
