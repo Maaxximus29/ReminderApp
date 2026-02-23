@@ -4,6 +4,8 @@ func main() {
 
 	grandIO()
 
+	select {}
+
 }
 
 //I could use a loop but that would mean that I ask the user on how many reminders he is going to add which is not a good idea
@@ -25,3 +27,14 @@ func main() {
 //the problem I will face is that now the code only reflects the index of the task added in the current session
 
 //It worked yes ir needs a lot of fine tuning but it worked
+//problems I am facing right now
+//how do I integrate the code with the timer
+//this is why I was overwhelmed
+//what to do
+//so, first task, access the decodeJson slice and use its time.Time?
+//how does time.Time actually work in simple language
+//how to use time.Time to send a remeinder
+//iterate through a slice of time.Time()
+//time.Until(slice[i])
+// when time.Now() == time.Until(slice[i])
+//send reminder

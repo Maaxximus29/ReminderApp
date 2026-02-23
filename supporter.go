@@ -16,8 +16,10 @@ type TasksToBeCompleted struct {
 }
 
 type Tasks []TasksToBeCompleted
+type Reminder []time.Time
 
 // var allTasks Tasks
+var reminder Reminder
 var decodeJson Tasks
 var createdInside TasksToBeCompleted
 
@@ -67,6 +69,17 @@ func checker(filename string) bool {
 	return true
 }
 
+func reminderChecker(r Reminder) {
+	for i := 0; i < len(r); i++ {
+		reminderChecker := time.Until(r[i])
+
+		if reminderChecker <= 0 {
+			fmt.Println("Reminder due")
+			break
+		}
+	}
+}
+
 func grandIO() {
 	checker := checker("storage.json")
 	if checker == true {
@@ -98,6 +111,7 @@ func grandIO() {
 	}
 
 	grandCreatedTask := createTask(grandTaskName, grandParsedDate, grandParsedTime)
+	reminder = append(reminder, grandCreatedTask.SpecifiedTime)
 	fmt.Printf("Reminder added successfully: %s %s %s\n", grandCreatedTask.TaskName, grandCreatedTask.DueDate.Format("02-01-2006"), grandCreatedTask.SpecifiedTime.Format("3:04 PM"))
 
 	jsonEncoding(decodeJson)
@@ -121,6 +135,7 @@ func grandIO() {
 		fmt.Println("Thank you for your time")
 	}
 	fmt.Println("would you like to add more reminders? Please reply with Yes or No")
+	go reminderChecker(reminder)
 	scanner.Scan()
 
 	grandYesOrNo := scanner.Text()
