@@ -4,8 +4,6 @@ func main() {
 
 	grandIO()
 
-	select {}
-
 }
 
 //I could use a loop but that would mean that I ask the user on how many reminders he is going to add which is not a good idea

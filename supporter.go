@@ -17,8 +17,10 @@ type TasksToBeCompleted struct {
 
 type Tasks []TasksToBeCompleted
 type Reminder []time.Time
+type ReminderDate []time.Time
 
 // var allTasks Tasks
+var reminderDate ReminderDate
 var reminder Reminder
 var decodeJson Tasks
 var createdInside TasksToBeCompleted
@@ -69,17 +71,38 @@ func checker(filename string) bool {
 	return true
 }
 
-func reminderChecker(r Reminder) {
-	for i := 0; i < len(r); i++ {
-		reminderChecker := time.Until(r[i])
+func reminderChecker(r Reminder, rd ReminderDate) {
+	now := time.Now()
+	for _, dd := range rd {
+		y1, m1, d1 := dd.Date()
+		y2, m2, d2 := now.Date()
+		if y1 == y2 && m1 == m2 && d1 == d2 {
+			for _, rt := range r {
+				if time.Now().After(rt) {
+					fmt.Print("REMINDER IS DUE")
+				}
 
-		if reminderChecker <= 0 {
-			fmt.Println("Reminder due")
-			break
+			}
+
 		}
+
 	}
+
+	//for i := 0; i < len(r); i++ {
+
+	//reminderChecker := r[i]
+	//reminderDateChecker := rd[i]
+	//if formatted == reminderDateChecker.Format("02-01-2006") {
+	//if time.Now().After(reminderChecker) {
+	//	fmt.Print("REMINDER IS DUE")
+	//}
+	//}
+
+	//}
+
 }
 
+// the above snippet does not work and will only function if I use the correct type from below to do this
 func grandIO() {
 	checker := checker("storage.json")
 	if checker == true {
@@ -111,11 +134,17 @@ func grandIO() {
 	}
 
 	grandCreatedTask := createTask(grandTaskName, grandParsedDate, grandParsedTime)
-	reminder = append(reminder, grandCreatedTask.SpecifiedTime)
+	//reminder = append(reminder, grandCreatedTask.SpecifiedTime)
+	//reminderDate = append(reminderDate, grandCreatedTask.DueDate)
 	fmt.Printf("Reminder added successfully: %s %s %s\n", grandCreatedTask.TaskName, grandCreatedTask.DueDate.Format("02-01-2006"), grandCreatedTask.SpecifiedTime.Format("3:04 PM"))
 
 	jsonEncoding(decodeJson)
 	decodeJson = jsonDecoding()
+	for _, individual := range decodeJson {
+		reminder = append(reminder, individual.SpecifiedTime)
+		reminderDate = append(reminderDate, individual.DueDate)
+	}
+	go reminderChecker(reminder, reminderDate)
 
 	fmt.Println("To view the created task please type Yes else No")
 	var grandConfirmationToViewAgain string
@@ -135,7 +164,7 @@ func grandIO() {
 		fmt.Println("Thank you for your time")
 	}
 	fmt.Println("would you like to add more reminders? Please reply with Yes or No")
-	go reminderChecker(reminder)
+	//go reminderChecker(reminder, reminderDate)
 	scanner.Scan()
 
 	grandYesOrNo := scanner.Text()
