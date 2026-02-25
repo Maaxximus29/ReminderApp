@@ -72,37 +72,44 @@ func checker(filename string) bool {
 	return true
 }
 
-func reminderChecker(r Reminder, rd ReminderDate) {
+func reminderChecker(r Reminder, rd ReminderDate, d Tasks) {
 	defer wg.Done()
-	now := time.Now()
-	for _, dd := range rd {
-		y1, m1, d1 := dd.Date()
-		y2, m2, d2 := now.Date()
-		if y1 == y2 && m1 == m2 && d1 == d2 {
-			for _, rt := range r {
-				if now.After(rt) {
-					fmt.Print("REMINDER IS DUE\n")
+	if len(r) > 0 {
+		now := time.Now()
+		for _, dd := range rd {
+			y1, m1, d1 := dd.Date()
+			y2, m2, d2 := now.Date()
+			if y1 == y2 && m1 == m2 && d1 == d2 {
+				for i, rt := range r {
+					if now.After(rt) {
+						fmt.Print("REMINDER IS DUE\n")
+						r = append(r[:i], r[i+1:]...)
+						rd = append(rd[:i], rd[i+1:]...)
+						d = append(d[:i], d[i+1:]...)
+
+					}
+
 				}
 
 			}
 
 		}
-
+	} else {
+		fmt.Print("All task completed")
 	}
-
-	//for i := 0; i < len(r); i++ {
-
-	//reminderChecker := r[i]
-	//reminderDateChecker := rd[i]
-	//if formatted == reminderDateChecker.Format("02-01-2006") {
-	//if time.Now().After(reminderChecker) {
-	//	fmt.Print("REMINDER IS DUE")
-	//}
-	//}
-
-	//}
-
 }
+
+//for i := 0; i < len(r); i++ {
+
+//reminderChecker := r[i]
+//reminderDateChecker := rd[i]
+//if formatted == reminderDateChecker.Format("02-01-2006") {
+//if time.Now().After(reminderChecker) {
+//	fmt.Print("REMINDER IS DUE")
+//}
+//}
+
+//}
 
 // the above snippet does not work and will only function if I use the correct type from below to do this
 func grandIO(wg *sync.WaitGroup) {
@@ -146,7 +153,8 @@ func grandIO(wg *sync.WaitGroup) {
 		reminder = append(reminder, individual.SpecifiedTime)
 		reminderDate = append(reminderDate, individual.DueDate)
 	}
-	go reminderChecker(reminder, reminderDate)
+	// reminder, reminderDate, decodeJson =
+	go reminderChecker(reminder, reminderDate, decodeJson)
 
 	fmt.Println("To view the created task please type Yes else No")
 	var grandConfirmationToViewAgain string
