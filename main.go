@@ -1,8 +1,14 @@
 package main
 
-func main() {
+import "sync"
 
-	grandIO()
+var wg sync.WaitGroup
+
+func main() {
+	wg.Add(1)
+	grandIO(&wg)
+
+	wg.Wait()
 
 }
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 	"text/tabwriter"
 	"time"
 )
@@ -72,14 +73,15 @@ func checker(filename string) bool {
 }
 
 func reminderChecker(r Reminder, rd ReminderDate) {
+	defer wg.Done()
 	now := time.Now()
 	for _, dd := range rd {
 		y1, m1, d1 := dd.Date()
 		y2, m2, d2 := now.Date()
 		if y1 == y2 && m1 == m2 && d1 == d2 {
 			for _, rt := range r {
-				if time.Now().After(rt) {
-					fmt.Print("REMINDER IS DUE")
+				if now.After(rt) {
+					fmt.Print("REMINDER IS DUE\n")
 				}
 
 			}
@@ -103,7 +105,7 @@ func reminderChecker(r Reminder, rd ReminderDate) {
 }
 
 // the above snippet does not work and will only function if I use the correct type from below to do this
-func grandIO() {
+func grandIO(wg *sync.WaitGroup) {
 	checker := checker("storage.json")
 	if checker == true {
 		checkerNewData, err := os.ReadFile("storage.json")
@@ -169,7 +171,7 @@ func grandIO() {
 
 	grandYesOrNo := scanner.Text()
 	if grandYesOrNo == "yes" {
-		grandIO()
+		grandIO(wg)
 	} else {
 		fmt.Println("Thank you for your time")
 	}
