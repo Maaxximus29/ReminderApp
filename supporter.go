@@ -187,3 +187,6 @@ func grandIO(wg *sync.WaitGroup) {
 }
 
 //task.dueDate.Format("02-01-2006")) how is the execution work for this? left to right evaluation or right to left and how does it work
+//no changes today, this is a cheat commit
+//I did solve 2 lc mediums
+//need to put in more training
