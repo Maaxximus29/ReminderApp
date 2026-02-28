@@ -86,6 +86,7 @@ func reminderChecker(r Reminder, rd ReminderDate, d Tasks) {
 						r = append(r[:i], r[i+1:]...)
 						rd = append(rd[:i], rd[i+1:]...)
 						d = append(d[:i], d[i+1:]...)
+						jsonEncoding(d)
 
 					}
 

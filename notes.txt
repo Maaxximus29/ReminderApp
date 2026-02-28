@@ -1,1 +1,12 @@
 just a notes file to write down the thought process
+I have a slice in golang which can be used to write data into json and also to extract data from json
+So my question was 
+if I modify the slice in anyway 
+and then read the data back into the json file
+will all the previously written data be overwritten?
+I looked it up and apparantly yes the data will be overwritten
+current structure is wrong it pops out the data as soon as the reminder time is met
+It will have to be changed once the interface is up and running
+The user should be asked wether or not they would like to keep the task or not 
+If they say yes then the task should stay as it is
+If not then the task should be updated
